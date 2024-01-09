@@ -1,14 +1,19 @@
 #!/usr/bin/node
+
+// prints a square
+
 const size = process.argv[2];
-if (isNaN(size) || size === undefined) {
-  console.log("Missing size");
-} else {
-  const num = parseInt(size);
-  for (let i = 0; i < num; i++) {
-    let squareLine = '';
-    for (let j = 0; j < num; j++) {
-      squareLine += 'X';
+
+if (!Number.isNaN(Number(size))) {
+  const numSize = parseInt(size);
+
+  for (let i = 0; i < numSize; i++) {
+    let row = '';
+    for (let j = 0; j < numSize; j++) {
+      row = row + 'X';
     }
-    console.log(squareLine);
+    console.log(row);
   }
+} else {
+  console.log('Missing size');
 }
