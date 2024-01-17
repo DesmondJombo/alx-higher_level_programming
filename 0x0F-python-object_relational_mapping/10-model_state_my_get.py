@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
 """
-lists all State objects from the database hbtn_0e_6_usa
+ prints the State object with the name passed as argument
+ from the database hbtn_0e_6_usa
 """
 
 if __name__ == "__main__":
@@ -13,6 +14,7 @@ if __name__ == "__main__":
     user = sys.argv[1]
     password = sys.argv[2]
     db_name = sys.argv[3]
+    state_name = sys.argv[4]
 
     engine = create_engine('mysql+mysqldb://{}:{}@localhost/{}'.format(
         user, password, db_name, pool_pre_ping=True))
@@ -20,9 +22,10 @@ if __name__ == "__main__":
 
     session = Session(engine)
 
-    first = session.query(State).order_by(State.id).first()
-    if first:
-        print("{}: {}".format(first.id, first.name))
+    results = session.query(State).filter(
+            State.name == state_name).order_by(State.id).first()
+    if results:
+        print(results.id)
     else:
-        print("Nothing")
+        print("Not found")
     session.close()

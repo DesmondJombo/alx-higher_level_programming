@@ -1,34 +1,27 @@
 #!/usr/bin/python3
-'''4-cities_by_state module'''
-import MySQLdb
-import sys
+
+"""
+ lists all states from the database hbtn_0e_0_usa that has the name
+"""
 
 
-if __name__ == "__main__":
-    ''' lists all cities from the database hbtn_0e_4_usa'''
-    connection = MySQLdb.connect(
-        host='localhost',
-        user=sys.argv[1],
-        passwd=sys.argv[2],
-        port=3306,
-        db=sys.argv[3]
-    )
+if __name__ == '__main__':
 
-    cur = connection.cursor()
+    import sys
+    import MySQLdb
 
-    query = (
-        "SELECT cities.id, cities.name, states.name "
-        "FROM cities "
-        "JOIN states ON cities.state_id = states.id "
-        "ORDER BY id ASC"
-    )
+    user_name = sys.argv[1]
+    password = sys.argv[2]
+    db_name = sys.argv[3]
 
-    cur.execute(query)
+    db = MySQLdb.connect(host='localhost', port=3306,
+                         user=user_name, passwd=password, db=db_name)
 
-    cities = cur.fetchall()
-
-    for city in cities:
-        print("{}".format(city))
-
-    cur.close()
-    connection.close()
+    cursor = db.cursor()
+    cursor.execute("SELECT cities.id, cities.name, states.name\
+                    FROM cities LEFT JOIN states\
+                    ON states.id=cities.state_id\
+                    ORDER BY cities.id ASC;")
+    rows = cursor.fetchall()
+    for row in rows:
+        print(row)

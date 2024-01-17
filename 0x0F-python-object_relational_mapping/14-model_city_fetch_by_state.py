@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """
-lists all State objects from the database hbtn_0e_6_usa
+prints all City objects from the database hbtn_0e_14_usa
 """
 
 if __name__ == "__main__":
@@ -9,6 +9,8 @@ if __name__ == "__main__":
     from sqlalchemy import create_engine
     from model_state import Base, State
     import sys
+    from model_city import City
+    from sqlalchemy.schema import Table
 
     user = sys.argv[1]
     password = sys.argv[2]
@@ -20,9 +22,9 @@ if __name__ == "__main__":
 
     session = Session(engine)
 
-    first = session.query(State).order_by(State.id).first()
-    if first:
-        print("{}: {}".format(first.id, first.name))
-    else:
-        print("Nothing")
+    results = session.query(State, City).filter(
+                            City.state_id == State.id).order_by(
+                            City.id).all()
+    for state, city in results:
+        print("{}: ({}) {}".format(state.name, city.id, city.name))
     session.close()

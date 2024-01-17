@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """
-lists all State objects from the database hbtn_0e_6_usa
+changes the name of a State object from the database hbtn_0e_6_usa
 """
 
 if __name__ == "__main__":
@@ -20,9 +20,8 @@ if __name__ == "__main__":
 
     session = Session(engine)
 
-    first = session.query(State).order_by(State.id).first()
-    if first:
-        print("{}: {}".format(first.id, first.name))
-    else:
-        print("Nothing")
+    state = session.query(State).filter(State.id == 2).first()
+    state.name = 'New Mexico'
+    session.commit()
+    print(a_state.id)
     session.close()

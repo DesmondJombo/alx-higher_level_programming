@@ -1,29 +1,24 @@
-#!/usr/bin/python3
-'''The 1-filter_states module'''
-import MySQLdb
-import sys
+1-filter_states.py#!/usr/bin/python3
 
-if __name__ == "__main__":
-    '''lists all states with a name starting with N
-    (upper N) from the database hbtn_0e_0_usa'''
-    connection = MySQLdb.connect(
-        host='localhost',
-        user=sys.argv[1],
-        passwd=sys.argv[2],
-        port=3306,
-        db=sys.argv[3]
-    )
+"""
+ lists all states from the database hbtn_0e_0_usa
+"""
 
-    cur = connection.cursor()
 
-    cur.execute(
-            "SELECT * FROM states WHERE name LIKE BINARY'{}' "
-            "ORDER BY id ASC".format('N%')
-            )
-    state_col = cur.fetchall()
+if __name__ == '__main__':
 
-    for row in state_col:
-        print("{}".format(row))
+    import sys
+    import MySQLdb
 
-    cur.close()
-    connection.close()
+    user_name = sys.argv[1]
+    password = sys.argv[2]
+    db_name = sys.argv[3]
+
+    db = MySQLdb.connect(host='localhost', port=3306,
+                         user=user_name, passwd=password, db=db_name)
+
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM states WHERE name LIKE BINARY 'N%' ORDER BY states.id ASC;")
+    rows = cursor.fetchall()
+    for row in rows:
+        print(row)

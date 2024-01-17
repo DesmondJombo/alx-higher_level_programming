@@ -1,25 +1,24 @@
 #!/usr/bin/python3
-'''The 0-select_states module'''
-import MySQLdb
-import sys
 
-if __name__ == "__main__":
-    ''' lists all states from the database hbtn_0e_0_usa'''
-    db = MySQLdb.connect(
-        host='localhost',
-        user=sys.argv[1],
-        passwd=sys.argv[2],
-        port=3306,
-        db=sys.argv[3]
-    )
+"""
+ lists all states from the database hbtn_0e_0_usa
+"""
 
-    cur = db.cursor()
 
-    cur.execute("SELECT * FROM states ORDER BY id ASC")
-    state_col = cur.fetchall()
+if __name__ == '__main__':
 
-    for row in state_col:
-        print("{}".format(row))
+    import sys
+    import MySQLdb
 
-    cur.close()
-    db.close()
+    user_name = sys.argv[1]
+    password = sys.argv[2]
+    db_name = sys.argv[3]
+
+    db = MySQLdb.connect(host='localhost', port=3306,
+                         user=user_name, passwd=password, db=db_name)
+
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM states ORDER BY states.id ASC;")
+    rows = cursor.fetchall()
+    for row in rows:
+        print(row)

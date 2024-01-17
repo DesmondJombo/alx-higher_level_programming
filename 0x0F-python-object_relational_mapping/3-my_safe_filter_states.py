@@ -1,34 +1,27 @@
 #!/usr/bin/python3
-'''3-my_safe_filter_states module'''
-import MySQLdb
-import sys
 
-if __name__ == "__main__":
-    ''' takes in an argument and displays all values in
-    the states table of hbtn_0e_0_usa where name matches
-    the argument.'''
-    connection = MySQLdb.connect(
-        host='localhost',
-        user=sys.argv[1],
-        passwd=sys.argv[2],
-        port=3306,
-        db=sys.argv[3]
-    )
+"""
+ lists all states from the database hbtn_0e_0_usa that has the name
+ Safe against injection
+"""
 
-    cur = connection.cursor()
 
-    name_matches = sys.argv[4]
+if __name__ == '__main__':
 
-    query = (
-        "SELECT * FROM states WHERE name "
-        "LIKE %s ORDER BY id ASC"
-    )
+    import sys
+    import MySQLdb
 
-    cur.execute(query, (name_matches,))
-    state_col = cur.fetchall()
+    user_name = sys.argv[1]
+    password = sys.argv[2]
+    db_name = sys.argv[3]
+    name = sys.argv[4]
 
-    for row in state_col:
-        print("{}".format(row))
+    db = MySQLdb.connect(host='localhost', port=3306,
+                         user=user_name, passwd=password, db=db_name)
 
-    cur.close()
-    connection.close()
+    cursor = db.cursor()
+    cursor.execute("""SELECT * FROM states WHERE name=%s
+                   ORDER BY states.id ASC; """, (name,))
+    rows = cursor.fetchall()
+    for row in rows:
+        print(row)

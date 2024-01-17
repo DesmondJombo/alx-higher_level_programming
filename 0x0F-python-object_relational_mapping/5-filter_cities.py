@@ -1,43 +1,38 @@
 #!/usr/bin/python3
-'''5-filter_cities'''
-import MySQLdb
-import sys
+
+"""
+takes in the name of a state as an argument
+and lists all cities of that state
+using the database hbtn_0e_4_usa
+"""
 
 
-if __name__ == "__main__":
-    ''' lists all cities from the database hbtn_0e_4_usa'''
-    if len(sys.argv) != 5:
-        sys.exit(1)
+if __name__ == '__main__':
 
-    connection = MySQLdb.connect(
-        host='localhost',
-        user=sys.argv[1],
-        passwd=sys.argv[2],
-        port=3306,
-        db=sys.argv[3]
-    )
+    import sys
+    import MySQLdb
 
-    cur = connection.cursor()
-
+    user_name = sys.argv[1]
+    password = sys.argv[2]
+    db_name = sys.argv[3]
     state_name = sys.argv[4]
 
-    query = (
-        "SELECT cities.name "
-        "FROM cities "
-        "JOIN states ON states.id = cities.state_id "
-        "WHERE states.name = %s "
-        "ORDER BY cities.id ASC"
-    )
+    db = MySQLdb.connect(host='localhost', port=3306,
+                         user=user_name, passwd=password, db=db_name)
 
-    cur.execute(query, (state_name,))
-
-    cities = cur.fetchall()
-
-    for i, city in enumerate(cities):
-        print("{}".format(city[0]), end="")
-        if i < len(cities) - 1:
-            print(', ', end="")
-    print('\n', end="")
-
-    cur.close()
-    connection.close()
+    cursor = db.cursor()
+    cursor.execute("SELECT cities.name\
+                    FROM cities INNER JOIN states\
+                    ON states.id=cities.state_id\
+                    WHERE states.name=%s\
+                    ORDER BY cities.id ASC; ", (state_name,))
+    rows = cursor.fetchall()
+    """for i, row in enumerate(rows):
+        if i < len(rows) - 1:
+            print(row[0], end=", ")
+            i = i+1
+        else:
+            print(row[0], end="\n")"""
+    print(", ".join([row[0] for row in rows]))
+    cursor.close()
+    db.close()
